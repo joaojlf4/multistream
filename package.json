@@ -1,0 +1,190 @@
+{
+	"name": "electron-react-bloatfree",
+	"productName": "ElectronReact",
+	"version": "0.1.0",
+	"description": "A simple alternative to electron-react-boilerplate",
+	"scripts": {
+		"build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
+		"build-dll": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js --colors",
+		"build-main": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.main.prod.babel.js --colors",
+		"build-renderer": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.renderer.prod.babel.js --colors",
+		"dev": "cross-env START_HOT=1 node -r @babel/register ./internals/scripts/check-port-in-use.js && cross-env START_HOT=1 yarn start-renderer-dev",
+		"flow": "flow",
+		"flow-typed": "rimraf flow-typed/npm && flow-typed install --overwrite || true",
+		"package": "yarn build && electron-builder build --publish never",
+		"package-all": "yarn build && electron-builder build -mwl",
+		"package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
+		"package-linux": "yarn build && electron-builder build --linux",
+		"package-win": "yarn build && electron-builder build --win --x64",
+		"postinstall": "yarn flow-typed && electron-builder install-app-deps package.json && yarn build-dll",
+		"prestart": "yarn build",
+		"start": "cross-env NODE_ENV=production electron ./app/main.prod.js",
+		"start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r @babel/register ./app/main.dev.js",
+		"start-renderer-dev": "cross-env NODE_ENV=development webpack-dev-server --config configs/webpack.config.renderer.dev.babel.js"
+	},
+	"main": "./app/main.prod.js",
+	"build": {
+		"productName": "electronreact",
+		"appId": "com.example.electronreact",
+		"files": [
+			"app/dist/",
+			"app/app.html",
+			"app/main.prod.js",
+			"app/main.prod.js.map",
+			"package.json"
+		],
+		"dmg": {
+			"contents": [
+				{
+					"x": 130,
+					"y": 220
+				},
+				{
+					"x": 410,
+					"y": 220,
+					"type": "link",
+					"path": "/Applications"
+				}
+			]
+		},
+		"mac": {
+			"target": "pkg"
+		},
+		"win": {
+			"target": [
+				"nsis",
+				"msi"
+			]
+		},
+		"linux": {
+			"target": [
+				"deb",
+				"rpm",
+				"snap",
+				"AppImage"
+			],
+			"category": "Development"
+		},
+		"directories": {
+			"buildResources": "resources",
+			"output": "release"
+		},
+		"publish": {
+			"provider": "github",
+			"owner": "nnmrts",
+			"repo": "electron-react-bloatfree",
+			"private": false
+		}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nnmrts/electron-react-bloatfree.git"
+	},
+	"author": {
+		"name": "nnmrts",
+		"email": "nanomiratus@gmail.com"
+	},
+	"contributors": [
+		{
+			"name": "nnmrts",
+			"email": "nanomiratus@gmail.com",
+			"url": "https://github.com/nnmrts"
+		}
+	],
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/nnmrts/electron-react-bloatfree/issues"
+	},
+	"keywords": [
+		"electron",
+		"boilerplate",
+		"react",
+		"flow",
+		"sass",
+		"webpack",
+		"hot",
+		"reload"
+	],
+	"homepage": "https://github.com/nnmrts/electron-react-bloatfree#readme",
+	"devDependencies": {
+		"@babel/core": "^7.1.6",
+		"@babel/plugin-proposal-class-properties": "^7.1.0",
+		"@babel/plugin-proposal-decorators": "^7.1.6",
+		"@babel/plugin-proposal-do-expressions": "^7.0.0",
+		"@babel/plugin-proposal-export-default-from": "^7.0.0",
+		"@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+		"@babel/plugin-proposal-function-bind": "^7.0.0",
+		"@babel/plugin-proposal-function-sent": "^7.1.0",
+		"@babel/plugin-proposal-json-strings": "^7.0.0",
+		"@babel/plugin-proposal-logical-assignment-operators": "^7.0.0",
+		"@babel/plugin-proposal-nullish-coalescing-operator": "^7.0.0",
+		"@babel/plugin-proposal-numeric-separator": "^7.0.0",
+		"@babel/plugin-proposal-optional-chaining": "^7.0.0",
+		"@babel/plugin-proposal-pipeline-operator": "^7.0.0",
+		"@babel/plugin-proposal-throw-expressions": "^7.0.0",
+		"@babel/plugin-syntax-dynamic-import": "^7.0.0",
+		"@babel/plugin-syntax-import-meta": "^7.0.0",
+		"@babel/plugin-transform-react-constant-elements": "^7.0.0",
+		"@babel/plugin-transform-react-inline-elements": "^7.0.0",
+		"@babel/preset-env": "^7.1.6",
+		"@babel/preset-flow": "^7.0.0",
+		"@babel/preset-react": "^7.0.0",
+		"@babel/register": "^7.0.0",
+		"@types/webpack-env": "^1.14.0",
+		"babel-core": "7.0.0-bridge.0",
+		"babel-eslint": "^10.0.1",
+		"babel-loader": "^8.0.4",
+		"babel-plugin-dev-expression": "^0.2.1",
+		"babel-plugin-transform-react-remove-prop-types": "^0.4.20",
+		"chalk": "^2.4.1",
+		"concurrently": "^4.1.0",
+		"cross-env": "^5.2.0",
+		"css-loader": "^3.0.0",
+		"detect-port": "^1.3.0",
+		"electron": "^5.0.7",
+		"electron-builder": "^21.1.1",
+		"electron-devtools-installer": "^2.2.4",
+		"eslint": "^6.1.0",
+		"eslint-config-airbnb": "^17.1.0",
+		"eslint-import-resolver-webpack": "^0.11.1",
+		"eslint-plugin-compat": "^3.3.0",
+		"eslint-plugin-flowtype": "^3.2.0",
+		"eslint-plugin-import": "^2.14.0",
+		"eslint-plugin-jsx-a11y": "6.2.3",
+		"eslint-plugin-react": "^7.14.3",
+		"file-loader": "^4.1.0",
+		"flow-bin": "^0.103.0",
+		"flow-runtime": "^0.17.0",
+		"flow-typed": "^2.5.1",
+		"mini-css-extract-plugin": "^0.8.0",
+		"node-sass": "^4.12.0",
+		"optimize-css-assets-webpack-plugin": "^5.0.1",
+		"rimraf": "^2.6.2",
+		"sass-loader": "^7.1.0",
+		"style-loader": "^0.23.1",
+		"terser-webpack-plugin": "^1.1.0",
+		"url-loader": "^2.1.0",
+		"webpack": "^4.26.0",
+		"webpack-bundle-analyzer": "^3.0.3",
+		"webpack-cli": "^3.1.2",
+		"webpack-dev-server": "^3.1.10",
+		"webpack-merge": "^4.1.4",
+		"yarn": "^1.12.3"
+	},
+	"dependencies": {
+		"devtron": "^1.4.0",
+		"electron-debug": "^3.0.1",
+		"electron-log": "^3.0.6",
+		"electron-updater": "^4.1.2",
+		"react": "^16.6.3",
+		"react-dom": "^16.6.3",
+		"react-hot-loader": "^4.3.12",
+		"source-map-support": "^0.5.9"
+	},
+	"devEngines": {
+		"node": ">=12.x",
+		"npm": ">=6.x",
+		"yarn": ">=1.16.x"
+	},
+	"browserslist": "electron 1.6"
+}
