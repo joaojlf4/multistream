@@ -4,6 +4,6 @@ import { render } from "react-dom";
 import App from "./app.js";
 
 render(
-	<App greeting="Hello" />,
+	<App/>,
 	document.getElementById("root")
 );

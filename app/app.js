@@ -1,32 +1,20 @@
 // @flow
 import { hot } from "react-hot-loader/root";
 import React from "react";
-import PropTypes from "prop-types"
+import { Provider } from 'react-redux';
+import store from './store';
 
 import "./app.global.css";
+import ConfigContainer from './components/ConfigContainer';
+import StatusContainer from './components/StatusContainer';
 
-type Props = {
-	greeting: String
-}
-
-/**
- *
- *
- * @param {Props} props
- * props
- * @returns {JSX.Element}
- * element
- */
-const App = ({
-	greeting
-}: Props) => (
-	<div>
-		<h2>{greeting} World!</h2>
-	</div>
-);
-
-App.propTypes = {
-	greeting: PropTypes.string.isRequired,
+const App = () => {
+	return (<Provider store={store}>
+		<div className="container">
+			<ConfigContainer />
+			<StatusContainer />
+		</div>
+	</Provider>)
 };
 
 export default module.hot ? hot(App) : App;

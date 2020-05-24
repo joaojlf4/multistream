@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Hello Electron React!</title>
+    <title></title>
     <script>
       (function() {
         if (!process.env.HOT) {
@@ -15,7 +15,7 @@
       }());
     </script>
   </head>
-  <body>
+  <body style="background: #36393F;">
     <div id="root"></div>
     <script>
       {
@@ -41,6 +41,19 @@
             .join('')
         );
       }
+    </script>
+    <script>
+      const customTitlebar = require('custom-electron-titlebar');
+      const titlebar = new customTitlebar.Titlebar({
+          backgroundColor: customTitlebar.Color.fromHex('#333'),
+          menu: false,
+          titleHorizontalAlignment: "left",    
+          unfocusEffect: false,
+          title: "Multistream"
+      });
+      titlebar.updateBackground("#202225")
+
+
     </script>
   </body>
 </html>

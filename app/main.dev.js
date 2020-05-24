@@ -14,8 +14,13 @@ import log from "electron-log";
 import sourceMapSupport from "source-map-support";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import electronDebug from "electron-debug";
+import download from 'download-file';
+import getffmpegurl from './utils/getFfmpegUrl';
+import path, { dirname } from 'path';
+import fs from 'fs';
+import extract from "extract-zip";
 
-import MenuBuilder from "./menu";
+// const { getWindowState, storeWindowState } = require('./services/persistConfig');
 
 /**
  *
@@ -72,39 +77,69 @@ app.on("ready", async() => {
 	if (process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true") {
 		await installExtension(REACT_DEVELOPER_TOOLS, !!process.env.UPGRADE_EXTENSIONS);
 	}
+	// mainWindow = new BrowserWindow({
+	// 	width: 600,
+	// 	height: 300,
+	// 	autoHideMenuBar: true,
+	// 	frame: false,
+	// })
 
-	mainWindow = new BrowserWindow({
-		show: false,
-		width: 1024,
-		height: 728,
-		webPreferences: {
-			nodeIntegration: true
-		}
-	});
+	// mainWindow.loadURL(`file://${__dirname}/loading.html`);
 
-	mainWindow.loadURL(`file://${__dirname}/app.html`);
+	function createMainWindow() {
+		mainWindow = new BrowserWindow({
+			width: 980,
+			height: 600,
+			x: undefined,
+			y: undefined,
+			webPreferences: {
+				nodeIntegration: true
+			},
+			frame: false,
+		});
+	
+		mainWindow.loadURL(`file://${__dirname}/app.html`);
+			
+		mainWindow.webContents.on("did-finish-load", () => {
+			if (!mainWindow) {
+				throw new Error("\"mainWindow\" is not defined");
+			}
+			if (process.env.START_MINIMIZED) {
+				mainWindow.minimize();
+			}
+			else {
+				mainWindow.show();
+				mainWindow.focus();
+			}
+		});
+	
+		mainWindow.on("closed", () => {
+			mainWindow = null;
+		})
+	}
+	createMainWindow()
 
-	// @TODO: Use 'ready-to-show' event
-	//        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-	mainWindow.webContents.on("did-finish-load", () => {
-		if (!mainWindow) {
-			throw new Error("\"mainWindow\" is not defined");
-		}
-		if (process.env.START_MINIMIZED) {
-			mainWindow.minimize();
-		}
-		else {
-			mainWindow.show();
-			mainWindow.focus();
-		}
-	});
-
-	mainWindow.on("closed", () => {
-		mainWindow = null;
-	});
-
-	const menuBuilder = new MenuBuilder(mainWindow);
-	menuBuilder.buildMenu();
+	console.log(app.getPath('appData'))
+	// if(fs.existsSync(path.join(app.getPath('appData'), 'multistream', 'ffmpeg-latest-win64-static'))) {
+	// 	createMainWindow();
+	// }else {
+	// 	mainWindow.loadURL(`file://${__dirname}/loading.html`);
+	// 	download(getffmpegurl(), {
+	// 	directory: path.join(app.getPath('appData'), 'multistream'),
+	// 	filename: "ffmpeg.zip"
+	// }, async function(err) {
+	// 	if(err) throw err;
+	// 	try {
+	// 		const source = path.join(app.getPath('appData'), 'multistream', 'ffmpeg.zip')
+	// 		const target = path.join(app.getPath('appData'), 'multistream')
+	// 		await extract(source, { dir: target });
+	// 		createMainWindow();
+	// 	} catch (error) {
+	// 		console.log(err);
+	// 		mainWindow.close();
+	// 	}
+	// })	
+	// }
 
 	// Remove this if your app does not use auto updates
 	// eslint-disable-next-line
