@@ -46,6 +46,7 @@ function ConfigContainer() {
         break;
       case 'insta': 
         setServerUrl('rtmps://live-upload.instagram.com:443/rtmp');
+        break;
       case 'custom': 
         setServerUrl('');
         break;

@@ -25,7 +25,7 @@
 	"main": "./app/main.prod.js",
 	"build": {
 		"productName": "Multistream",
-		"appId": "com.joaol2099.multistream",
+		"appId": "com.joaojlf4.multistream",
 		"files": [
 			"app/dist/",
 			"app/app.html",
@@ -74,29 +74,29 @@
 		},
 		"publish": {
 			"provider": "github",
-			"owner": "joaol2099",
+			"owner": "joaojlf4",
 			"repo": "multistream",
 			"private": false
 		}
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/nnmrts/electron-react-bloatfree.git"
+		"url": "git+https://github.com/joaojlf4/multistream.git"
 	},
 	"author": {
-		"name": "nnmrts",
+		"name": "joaojlf4",
 		"email": "nanomiratus@gmail.com"
 	},
 	"contributors": [
 		{
-			"name": "nnmrts",
+			"name": "joaojlf4",
 			"email": "nanomiratus@gmail.com",
-			"url": "https://github.com/nnmrts"
+			"url": "https://github.com/joaojlf4"
 		}
 	],
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/nnmrts/electron-react-bloatfree/issues"
+		"url": "https://github.com/joaojlf4/electron-react-bloatfree/issues"
 	},
 	"keywords": [
 		"electron",
@@ -108,7 +108,7 @@
 		"hot",
 		"reload"
 	],
-	"homepage": "https://github.com/nnmrts/electron-react-bloatfree#readme",
+	"homepage": "https://github.com/joaojlf4/electron-react-bloatfree#readme",
 	"devDependencies": {
 		"@babel/core": "^7.1.6",
 		"@babel/plugin-proposal-class-properties": "^7.1.0",
