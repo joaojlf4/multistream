@@ -85,12 +85,12 @@
 	},
 	"author": {
 		"name": "joaojlf4",
-		"email": "nanomiratus@gmail.com"
+		"email": "joninhodasplay@gmail.com"
 	},
 	"contributors": [
 		{
 			"name": "joaojlf4",
-			"email": "nanomiratus@gmail.com",
+			"email": "joninhodasplay@gmail.com",
 			"url": "https://github.com/joaojlf4"
 		}
 	],
@@ -108,7 +108,7 @@
 		"hot",
 		"reload"
 	],
-	"homepage": "https://github.com/joaojlf4/electron-react-bloatfree#readme",
+	"homepage": "https://github.com/joaojlf4/multistream#readme",
 	"devDependencies": {
 		"@babel/core": "^7.1.6",
 		"@babel/plugin-proposal-class-properties": "^7.1.0",
