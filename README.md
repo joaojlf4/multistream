@@ -1,6 +1,6 @@
 ﻿# Multistream 
 
-![demo](demo.gif)
+![demo](https://i.imgur.com/KmE6eqp.gif)
 
 ## Why Multistream?
 Multistream is a way to stream to multiple platforms at the same time, a feature that is not available on some broadcasters (such as OBS Studio, for example).
