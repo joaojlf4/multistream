@@ -20,10 +20,10 @@ function Status() {
   return (
   <Container>
     <header>
-      <p>1. No seu encoder (OBS Studio, Streamlabs OBS, etc.), configure a url de transmissão como <strong>rtmp://localhost:1935/live</strong>;</p>
-      <p>2. Adicione seus servidores em "Configure sua stream" clique em "Iniciar Servidor";</p>
-      <p>3. Inicie a transmissão no encoder normalmente.</p>
-    </header>
+       <p> 1. In your encoder (OBS Studio, Streamlabs OBS, etc.), set the broadcast url to <strong>rtmp://localhost:1935/live</strong>; </p>
+       <p> 2. Add your servers in "Configure your stream" click "Start Server"; </p>
+       <p> 3. Start transmission on the encoder as normal. </p>
+     </header>
     <StatusContainer>
       {
         status.map((stat) => {

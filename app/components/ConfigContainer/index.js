@@ -7,16 +7,18 @@ import {
   AddButton,
   ActionContainer, 
   Warning,
-  Filter
   } from './styles';
 import Input from '../Input';
 import StreamMockup from '../StreamMockup';
 import { useDispatch } from 'react-redux';
+import ElectronStore from 'electron-store';
 
 import createStream from '../../stream';
 import crypto from 'crypto';
 
 function ConfigContainer() {
+
+  const store = new ElectronStore();
 
   const dispatch = useDispatch();
   
@@ -24,31 +26,42 @@ function ConfigContainer() {
   const [stream, setStream] = useState([]);
   const [isEmpty, setIsEmpty] = useState(false);
   const [streams, setStreams] = useState([]);
+  const [name, setName] = useState('');
   const [selectValue, setSelectValue] = useState('custom');
   const [serverUrl, setServerUrl] = useState('');
   const [key, setKey] = useState('');
   const [isStreaming, setIsStreaming] = useState(false)
 
   useEffect(() => {
+    setStreams(store.get('streams') || []);
+  }, [])
+
+  useEffect(() => {
     setStream(createStream(streams));
+    store.set('streams', streams);
   }, [streams]);
 
   function handleSelectChange(e){
     switch (e.target.value) {
       case 'fb': 
         setServerUrl('rtmps://live-api-s.facebook.com:443/rtmp');
+        setName('Facebook');
         break;
       case 'yt': 
         setServerUrl('rtmp://x.rtmp.youtube.com/live2');
+        setName('Youtube');
         break;
       case 'twitch': 
         setServerUrl('rtmp://live-sao.twitch.tv/app');
+        setName('Twitch');
         break;
       case 'insta': 
         setServerUrl('rtmps://live-upload.instagram.com:443/rtmp');
+        setName('Instagram');
         break;
       case 'custom': 
-        setServerUrl('');
+      setServerUrl('');
+      setName(`Live ${streams.length}`);
         break;
     }
     setSelectValue(e.target.value)
@@ -64,8 +77,9 @@ function ConfigContainer() {
     const newStream = {
       id: crypto.randomBytes(4).toString('hex'),
       type: selectValue,
+      name,
       endpoint: serverUrl,
-      key
+      key,
     };
     setStreams([...streams, ...[newStream]]);
     if(selectValue === 'custom') setServerUrl('');
@@ -85,19 +99,22 @@ function ConfigContainer() {
     if(streams.length === 0) return setNoStream(true);
     setNoStream(false);
     if(!isStreaming) {
+      dispatch({
+        type: "CLEAR_STATUS",
+      })
       stream.run();
       setIsStreaming(true);
       dispatch({ 
         type: "UPDATE_STATUS",
         status: {
-          message: 'Servidor inciado, aguardando encoder...',
+          message: 'Server started, waiting for encoder ...',
         }
       })
       stream.on('prePlay', () => {
         dispatch({ 
           type: "UPDATE_STATUS",
           status: {
-            message: 'Encoder conectado. Iniciando transmissão.',
+            message: 'Encoder connected. Starting stream.',
             color: ""
           }
         })
@@ -109,7 +126,7 @@ function ConfigContainer() {
       dispatch({ 
         type: "UPDATE_STATUS",
         status: {
-          message: 'Servidor encerrado.',
+          message: 'Server shut down.',
           id,
         }
       })
@@ -117,52 +134,56 @@ function ConfigContainer() {
   }
   return (
     <Container>
-      <h1>Configure sua stream ({streams.length})</h1>
+      <h1>Configure your stream ({streams.length})</h1>
       <StreamsContainer >
         {
           streams.map(stream => 
             <StreamMockup 
               keyid={stream.id}
               key={stream.id}
+              streamName={stream.name}
               endpoint={stream.endpoint}
               streamKey={stream.key}
               type={stream.type}
-              handleRemove={isStreaming ? () => alert('Encerre a o servidor para remover uma stream.') :  handleDelete}
+              handleRemove={isStreaming ? () => alert('Shut down the server before removing a stream.') :  handleDelete}
               />)
         }
-        { isEmpty ? <Warning>Preencha todos os campos.</Warning> : null }
-        <Adder onSubmit={handleSubmit}>
+        { isEmpty ? <Warning>Fill in all the fields.</Warning> : null }
+        <Adder onSubmit={isStreaming ? () => alert('Shut down the server before adding a stream.') :  handleSubmit}>
           <Select onChange={handleSelectChange}>
-            <option value="custom">Personalizado...</option>
+            <option value="custom">Custom...</option>
             <option value="yt">Youtube</option>
             <option value="fb">Facebook</option>
             <option value="twitch">Twitch</option>
             <option value="insta">Instagram</option>
           </Select>
           <Input 
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"/>
+          <Input 
             value={serverUrl}
             onChange={(e) => setServerUrl(e.target.value)}
             disabled={selectValue !== 'custom'}
             placeholder="Endpoint RTMP, ex: rtmp://server.tk/live"/>
-
           <Input 
-            placeholder="Chave"
+            placeholder="Key"
             type="password"
             value={key}
             onChange={e => setKey(e.target.value)}/>
           <AddButton type="submit">
-            Adicionar
+            Add
           </AddButton>
         </Adder>
       </StreamsContainer>
       <ActionContainer  isStreaming={isStreaming}>
         {
-          noStream ? <Warning>Você precisa ter ao menos uma stream adicionada.</Warning> :
+          noStream ? <Warning>You must have at least one stream added.</Warning> :
           <></>
         }
         <button type="button" onClick={handleAction}>
           { streams !== [] &&
-            isStreaming ? "Parar Servidor" : "Iniciar Servidor" }
+            isStreaming ? "Stop server" : "Start server" }
         </button>
       </ActionContainer>
     </Container>

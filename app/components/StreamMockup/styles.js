@@ -4,6 +4,9 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+  h3 {
+    color: #e5e5e5;
+  }
 `;
 
 export const RemoveButton = styled.button`
