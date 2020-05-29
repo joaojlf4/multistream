@@ -1,26 +1,22 @@
-const INITIAL_STATE = [{
-  message: "Aguardando conexão do encoder..."
-}];
-
 // import nodeConsole from 'console';
+import terminal from 'console';
+
+const Console = new terminal.Console(process.stdout, process.stderr);
 
 export default function (state = [], action) {
-  // const Console = new nodeConsole.Console(process.stdout, process.stderr);
-  // Console.log(action)
   switch (action.type) {
-    case "UPDATE_STATUS": 
-      return [...state, action.status].filter((item, index) => {
-        const previousItem = state[index - 1];
-        if(previousItem) {
-          if(previousItem.message === item.message) {
-            return;
-          }else {
-            return item;
-          }
-        }else {
-          return item;
-        }
-      });
+    case "UPDATE_STATUS":
+      const newArray = [...state, action.status.message] 
+      return newArray.filter((item, index) => {
+        return newArray.indexOf(item) === index
+      })
+
+    case "CLEAR_STATUS": 
+      return [];
+    case "REMOVE_PREVIEW": 
+      return state.filter(item => {
+        return item !== 'live!'
+      })
     default: 
       return state;
   }

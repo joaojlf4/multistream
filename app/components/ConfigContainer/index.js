@@ -5,6 +5,7 @@ import {
   Adder,
   Select,
   AddButton,
+  SaveButton,
   ActionContainer, 
   Warning,
   } from './styles';
@@ -30,8 +31,10 @@ function ConfigContainer() {
   const [selectValue, setSelectValue] = useState('custom');
   const [serverUrl, setServerUrl] = useState('');
   const [key, setKey] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false)
-
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [border, setBorder] = useState(0);
+  
   useEffect(() => {
     setStreams(store.get('streams') || []);
   }, [])
@@ -45,23 +48,23 @@ function ConfigContainer() {
     switch (e.target.value) {
       case 'fb': 
         setServerUrl('rtmps://live-api-s.facebook.com:443/rtmp');
-        setName('Facebook');
+        if(!name) setName('Facebook');
         break;
       case 'yt': 
         setServerUrl('rtmp://x.rtmp.youtube.com/live2');
-        setName('Youtube');
+        if(!name) setName('Youtube');
         break;
       case 'twitch': 
         setServerUrl('rtmp://live-sao.twitch.tv/app');
-        setName('Twitch');
+        if(!name) setName('Twitch');
         break;
       case 'insta': 
         setServerUrl('rtmps://live-upload.instagram.com:443/rtmp');
-        setName('Instagram');
+        if(!name) setName('Instagram');
         break;
       case 'custom': 
-      setServerUrl('');
-      setName(`Live ${streams.length}`);
+        setServerUrl('');
+        if(!name) setName(`Live ${streams.length + 1}`);
         break;
     }
     setSelectValue(e.target.value)
@@ -81,44 +84,74 @@ function ConfigContainer() {
       endpoint: serverUrl,
       key,
     };
-    setStreams([...streams, ...[newStream]]);
-    if(selectValue === 'custom') setServerUrl('');
+    setStreams([...streams, newStream]);
+    // if(selectValue === 'custom') setServerUrl('');
+    setSelectValue('custom');
+    setServerUrl('');
     setKey('');
+    setName('');
     setStream(createStream(streams));
+    setIsEditing(false);
   }
 
-  function handleDelete(obj) {
+  function handleDelete(id) {
     setStream(createStream(streams));
     setStreams(streams.filter(stream => {
-      return stream.id !== obj.id
+      return stream.id !== id
     }));
   }
 
+  function handleEdit({ id, name: streamName, type, endpoint, key: streamKey}) {
+    setIsEditing(true);
+    setStreams(streams.filter(stream => {
+      return stream.id !== id
+    }));
+    setName(streamName);
+    setServerUrl(endpoint);
+    setKey(streamKey);
+    setSelectValue(type);
+  }
 
   function handleAction() {
     if(streams.length === 0) return setNoStream(true);
     setNoStream(false);
     if(!isStreaming) {
+      setIsStreaming(true);
+      stream.run();
       dispatch({
         type: "CLEAR_STATUS",
       })
-      stream.run();
-      setIsStreaming(true);
-      dispatch({ 
+      dispatch({
         type: "UPDATE_STATUS",
-        status: {
-          message: 'Server started, waiting for encoder ...',
-        }
+        status: { message: "Waiting for encoder connection..." }
       })
-      stream.on('prePlay', () => {
-        dispatch({ 
+      stream.on('preConnect', () => { console.log('preconnect') })
+      stream.on('postConnect', () => { 
+        dispatch({
           type: "UPDATE_STATUS",
-          status: {
-            message: 'Encoder connected. Starting stream.',
-            color: ""
-          }
+          status: { message: "Encoder connected, starting stream..." }
+        });
+       })
+      stream.on('doneConnect', () => { 
+        dispatch({
+          type: "UPDATE_STATUS",
+          status: { message: "Encoder disconnected, stream finished." }
         })
-      });
+        dispatch({
+          type: "REMOVE_VIDEO",
+        })
+       })
+      stream.on('prePublish', () => { console.log('prePublish') })
+      stream.on('postPublish', () => { console.log('postPublish') })
+      stream.on('donePublish', () => { console.log('donePublish') })
+      stream.on('prePlay', () => console.log('preplay'))
+      stream.on('postPlay', () => { 
+        dispatch({
+          type: "UPDATE_STATUS",
+          status: { message: "live!" }
+        })
+       })
+      stream.on('donePlay', () => { console.log('donePlay') })
       
     }else {
       stream.stop();
@@ -127,7 +160,6 @@ function ConfigContainer() {
         type: "UPDATE_STATUS",
         status: {
           message: 'Server shut down.',
-          id,
         }
       })
     }
@@ -146,11 +178,12 @@ function ConfigContainer() {
               streamKey={stream.key}
               type={stream.type}
               handleRemove={isStreaming ? () => alert('Shut down the server before removing a stream.') :  handleDelete}
+              handleEdit={isStreaming ? () => alert('Shut down the server before edit a stream.') : handleEdit}
               />)
         }
         { isEmpty ? <Warning>Fill in all the fields.</Warning> : null }
         <Adder onSubmit={isStreaming ? () => alert('Shut down the server before adding a stream.') :  handleSubmit}>
-          <Select onChange={handleSelectChange}>
+          <Select  border={border} value={selectValue} onChange={handleSelectChange}>
             <option value="custom">Custom...</option>
             <option value="yt">Youtube</option>
             <option value="fb">Facebook</option>
@@ -158,22 +191,25 @@ function ConfigContainer() {
             <option value="insta">Instagram</option>
           </Select>
           <Input 
+            border={border}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Name"/>
           <Input 
+            border={border}
             value={serverUrl}
             onChange={(e) => setServerUrl(e.target.value)}
             disabled={selectValue !== 'custom'}
             placeholder="Endpoint RTMP, ex: rtmp://server.tk/live"/>
           <Input 
+            border={border}
             placeholder="Key"
             type="password"
             value={key}
             onChange={e => setKey(e.target.value)}/>
-          <AddButton type="submit">
+          {!isEditing ? <AddButton type="submit">
             Add
-          </AddButton>
+          </AddButton> : <SaveButton onClick={handleSubmit}>Save Changes</SaveButton>}
         </Adder>
       </StreamsContainer>
       <ActionContainer  isStreaming={isStreaming}>

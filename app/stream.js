@@ -4,7 +4,7 @@ import path from 'path';
 import { remote } from 'electron';
 
 export default function(data) {
-
+  console.log(data)
   const streams = data.map(stream => ({
     endpoint: removeBarOfRtmpUrl(stream.endpoint),
     key: stream.key,
@@ -28,7 +28,7 @@ export default function(data) {
       tasks: streams.map(stream => ({
         app: 'live',
         mode: 'push',
-        edge: `${stream.endpoint}/${stream.key}`
+        edge: `${stream.endpoint}/${stream.key}`,
       }))
     },
   };

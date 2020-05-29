@@ -1,8 +1,10 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { flash } from 'react-animations';
+
 
 export const CustomInput = styled.input`
   border-radius: 6px;
-  border: 0;
+  border: ${props => props.border ? props.border : 0}px solid #597DFD;
   height: 18px;
   padding: 20px 11px;
   background: #40444B;

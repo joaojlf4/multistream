@@ -14,11 +14,9 @@ import log from "electron-log";
 import sourceMapSupport from "source-map-support";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import electronDebug from "electron-debug";
-import download from 'download-file';
-import getffmpegurl from './utils/getFfmpegUrl';
-import path, { dirname } from 'path';
-import fs from 'fs';
-import extract from "extract-zip";
+import ElectronStore from 'electron-store';
+import path from 'path';
+import os from 'os';
 
 // const { getWindowState, storeWindowState } = require('./services/persistConfig');
 
@@ -85,21 +83,29 @@ app.on("ready", async() => {
 	// })
 
 	// mainWindow.loadURL(`file://${__dirname}/loading.html`);
-
+	const store = new ElectronStore();
 	function createMainWindow() {
+
+		const { width, height, x, y } = 
+			store.get('bounds') || {
+				width: 980,
+				height: 600,
+				x: undefined,
+				y: undefined
+			};
+
 		mainWindow = new BrowserWindow({
-			width: 980,
-			height: 600,
-			x: undefined,
-			y: undefined,
+			width,
+			height,
+			x,
+			y,
 			webPreferences: {
 				nodeIntegration: true
 			},
 			frame: false,
 		});
 	
-		mainWindow.loadURL(`file://${__dirname}/app.html`);
-			
+		mainWindow.loadURL(`file://${__dirname}/app.html`);			
 		mainWindow.webContents.on("did-finish-load", () => {
 			if (!mainWindow) {
 				throw new Error("\"mainWindow\" is not defined");
@@ -113,8 +119,13 @@ app.on("ready", async() => {
 			}
 		});
 	
+		mainWindow.on('close', () => {
+			store.set('bounds', mainWindow.getBounds());
+		})
+
 		mainWindow.on("closed", () => {
 			mainWindow = null;
+
 		})
 	}
 	createMainWindow()

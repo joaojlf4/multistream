@@ -4,7 +4,6 @@ export const Container = styled.div`
   display: flex;
   width: 70%;
   flex-direction: column;
-  justify-content: space-between;
   background: #36393F;
   h1 {
     font-size: 22px;
@@ -15,11 +14,9 @@ export const Container = styled.div`
 `;
 
 export const StreamsContainer = styled.div`
-  display: flex;
-  flex: 1;
   padding: 18px 30px;
-  flex-direction: column;
-  overflow: auto;
+  overflow-y: scroll;
+  padding-bottom: 18%;
   &::-webkit-scrollbar{
     width: 0 !important
   }
@@ -27,6 +24,8 @@ export const StreamsContainer = styled.div`
 
 export const ActionContainer = styled.footer`
   display: flex;
+  width: 70%;
+  position: fixed;
   bottom: 0;
   background: rgb(40, 42, 46);
   padding: 15px 15px;
@@ -54,6 +53,7 @@ export const Adder = styled.form`
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-top: 14px;
 `;
 
 export const Select = styled.select`
@@ -74,6 +74,26 @@ export const AddButton = styled.button`
   padding: 8px 15px;
   border: 0;
   background: #7289DA;
+  color: #f0f0f0;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: top ease .2s;
+  &:hover {
+    top: -5px;
+  }
+`;
+
+export const SaveButton = styled.button`
+  position: relative;
+  top: 0;
+  width: fit-content;
+  align-self: flex-end;
+  padding: 8px 15px;
+  border: 0;
+  background: #597DFD;
   color: #f0f0f0;
   font-size: 13px;
   font-weight: 600;

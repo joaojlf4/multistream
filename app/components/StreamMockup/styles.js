@@ -9,23 +9,30 @@ export const Container = styled.div`
   }
 `;
 
-export const RemoveButton = styled.button`
-  position: relative;
-  top: 0;
-  width: fit-content;
+export const Button = styled.button`
+  margin-left: 12px;
   align-self: flex-end;
-  padding: 8px 15px;
+  position: relative;
+  width: fit-content;
+  top: 0;
   border: 0;
-  background: #D84040;
-  color: #f0f0f0;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  background: transparent;
+  color: #bbb;
   font-size: 13px;
   font-weight: 600;
   border-radius: 4px;
   cursor: pointer;
-  transition: top ease .2s;
+  transition: color ease .2s;
   &:hover {
-    top: -5px;
+    color: #e5e5e5;
+  }
+`;
+
+export const Head = styled.div`
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  span {
+    margin-left: 10px; 
   }
 `;

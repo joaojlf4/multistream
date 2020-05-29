@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ReactFlvPlayer } from 'react-flv-player';
 
 export const Container = styled.div`
   display: flex;
@@ -15,7 +16,7 @@ export const Container = styled.div`
     color: #ccc;
     max-width: 100%;
     p + p {
-      margin-top: 8px;
+      margin-top: 0px;
     }
     p:last-child {
       padding-bottom: 4px;
@@ -35,4 +36,9 @@ export const StatusContainer = styled.main`
   span {
     margin-top: 4px;
   }
+`;
+
+export const Preview = styled(ReactFlvPlayer)`
+  display: flex;
+  margin-right: 4px;
 `;
