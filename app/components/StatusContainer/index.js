@@ -35,6 +35,7 @@ function Status() {
         status.map((stat) => {
           if(stat === 'live!') {
             return <Preview
+                          key={stat}
                           controls="false"
                           url = "http://localhost:8000/live/preview.flv"
                           isLive={true}

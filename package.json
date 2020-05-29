@@ -1,7 +1,7 @@
 {
 	"name": "multistream",
 	"productName": "Multistream",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "Simple alternative to make multi-platform streaming.",
 	"scripts": {
 		"build": "yarn build-main && yarn build-renderer",

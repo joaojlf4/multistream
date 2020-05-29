@@ -30,9 +30,13 @@ export const Container = styled.div`
 `;
 
 export const StatusContainer = styled.main`
-  padding: 20px;
+  padding: 10px 20px;
   display: flex;
   flex-direction: column;
+  overflow: auto;
+  &::-webkit-scrollbar{
+    width: 0 !important
+  }
   span {
     margin-top: 4px;
   }
