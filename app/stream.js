@@ -1,5 +1,6 @@
 import NodeMediaServer from 'node-media-server';
 import removeBarOfRtmpUrl from './utils/removeBarRtmpUrl';
+import getFFmpegPath from './utils/getFFmpegPath';
 import path from 'path';
 import { remote } from 'electron';
 
@@ -24,7 +25,7 @@ export default function(data) {
     },
     relay: {
       // C:\Users\Usuario\Desktop\multistream\node_modules\.bin\ffmpeg.exe
-      ffmpeg: path.join(remote.app.getPath('appData'), '..', 'Local', 'Programs', 'multistream', 'app', 'ffmpeg', 'bin', 'ffmpeg.exe'),
+      ffmpeg: getFFmpegPath(),
       tasks: streams.map(stream => ({
         app: 'live',
         mode: 'push',

@@ -7,12 +7,14 @@ import store from './store';
 import "./app.global.css";
 import ConfigContainer from './components/ConfigContainer';
 import StatusContainer from './components/StatusContainer';
+import Prevent from './components/Prevent';
 import { IntlProvider } from 'react-intl'; 
 
 const App = () => {
 	return (
 		<Provider store={store}>
 			<IntlProvider locale="pt">
+				{/* <Prevent /> */}
 				<div className="container">
 					<ConfigContainer />
 					<StatusContainer />

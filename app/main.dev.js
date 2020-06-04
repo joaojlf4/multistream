@@ -8,15 +8,13 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, IpcMain, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import sourceMapSupport from "source-map-support";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import electronDebug from "electron-debug";
 import ElectronStore from 'electron-store';
-import path from 'path';
-import os from 'os';
 
 // const { getWindowState, storeWindowState } = require('./services/persistConfig');
 
@@ -86,8 +84,7 @@ app.on("ready", async() => {
 	const store = new ElectronStore();
 	function createMainWindow() {
 
-		const { width, height, x, y } = 
-			store.get('bounds') || {
+		const { width, height, x, y } = store.get('bounds') || {
 				width: 980,
 				height: 600,
 				x: undefined,
@@ -118,11 +115,16 @@ app.on("ready", async() => {
 				mainWindow.focus();
 			}
 		});
-	
-		mainWindow.on('close', () => {
-			store.set('bounds', mainWindow.getBounds());
-		})
 
+		let isStreaming = false;
+		
+		ipcMain.once('setStreamingTrue', () => {
+			isStreaming = true;
+		})
+		ipcMain.once('setStreamingFalse', () => {
+			isStreaming = false;
+		})
+		
 		mainWindow.on("closed", () => {
 			mainWindow = null;
 

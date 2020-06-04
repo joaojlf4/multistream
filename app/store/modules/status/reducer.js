@@ -1,7 +1,6 @@
 // import nodeConsole from 'console';
 import terminal from 'console';
 
-const Console = new terminal.Console(process.stdout, process.stderr);
 
 export default function (state = [], action) {
   switch (action.type) {

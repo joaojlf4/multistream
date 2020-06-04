@@ -11,13 +11,18 @@ import {
   } from './styles';
 import Input from '../Input';
 import StreamMockup from '../StreamMockup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ElectronStore from 'electron-store';
+import { ipcRenderer } from 'electron';
 
 import createStream from '../../stream';
 import crypto from 'crypto';
 
 function ConfigContainer() {
+
+  const isStreaming = useSelector(state => {
+    return state.isStreamingReducer;
+  })
 
   const store = new ElectronStore();
 
@@ -31,7 +36,6 @@ function ConfigContainer() {
   const [selectValue, setSelectValue] = useState('custom');
   const [serverUrl, setServerUrl] = useState('');
   const [key, setKey] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [border, setBorder] = useState(0);
   
@@ -116,7 +120,11 @@ function ConfigContainer() {
     if(streams.length === 0) return setNoStream(true);
     setNoStream(false);
     if(!isStreaming) {
-      setIsStreaming(true);
+      ipcRenderer.send('setStreamingTrue', true);
+      dispatch({
+        type: "UPDATE_IS_STREAMING",
+        isStreaming: true,
+      });
       stream.run();
       dispatch({
         type: "CLEAR_STATUS",
@@ -155,7 +163,11 @@ function ConfigContainer() {
       
     }else {
       stream.stop();
-      setIsStreaming(false)
+      ipcRenderer.send('setStreamingFalse', false);
+      dispatch({
+        type: "UPDATE_IS_STREAMING",
+        isStreaming: false,
+      });
       dispatch({ 
         type: "UPDATE_STATUS",
         status: {
