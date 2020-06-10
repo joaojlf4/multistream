@@ -2,7 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <link rel="stylesheet" href="styles.css">
+    <title>Confirm</title>
     <script>
       (function() {
         if (!process.env.HOT) {
@@ -16,48 +17,43 @@
     </script>
   </head>
   <body style="background: #36393F;">
-    <div id="root"></div>
+
+    <div class="container">
+      Are you sure you want to close? All your streams will be finished.
+      <div class="actions">
+        <a>Cancel</a>
+        <button class="confirm">Yes, i'm sure</button>
+      </div>
+    </div>
+
     <script>
-      {
-        const scripts = [];
+      const { remote, ipcRenderer } = require('electron');
+      const cancel = document.querySelector('a');
+      const confirmClosing = document.querySelector('button.confirm');
 
-        // Dynamically insert the DLL script in development env in the
-        // renderer process
-        if (process.env.NODE_ENV === 'development') {
-          scripts.push('../dll/renderer.dev.dll.js');
-        }
+      const preventWindow = remote.getCurrentWindow();
 
-        // Dynamically insert the bundled app script in the renderer process
-        const port = process.env.PORT || 1212;
-        scripts.push(
-          (process.env.HOT)
-            ? 'http://localhost:' + port + '/dist/renderer.dev.js'
-            : './dist/renderer.prod.js'
-        );
-
-        document.write(
-          scripts
-            .map(script => `<script defer src="${script}"><\/script>`)
-            .join('')
-        );
+      cancel.onclick = () => {
+        preventWindow.close();
+      };
+      confirmClosing.onclick = () => {
+        ipcRenderer.send('confirmClosing', true);
       }
     </script>
+
     <script>
       const customTitlebar = require('custom-electron-titlebar');
       const path = require('path');
-      const { remote } = require('electron');
       const titlebar = new customTitlebar.Titlebar({
           backgroundColor: customTitlebar.Color.fromHex('#333'),
           menu: false,
           titleHorizontalAlignment: "left",    
           unfocusEffect: false,
-          title: "Multistream",
-          titleStyle: "",
-          icon: '../../icon.png'
+          title: "Confirm",
+          minimizable: false,
+          maximizable: false
       });
       titlebar.updateBackground("#202225")
-
-
     </script>
   </body>
 </html>

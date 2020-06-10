@@ -41,12 +41,24 @@ function ConfigContainer() {
   
   useEffect(() => {
     setStreams(store.get('streams') || []);
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    ipcRenderer.send('setIsStreaming', isStreaming);
+  }, [isStreaming]);
 
   useEffect(() => {
     setStream(createStream(streams));
     store.set('streams', streams);
   }, [streams]);
+
+  ipcRenderer.on('confirmClosing', (e, arg) => {
+    dispatch({
+      type: "UPDATE_IS_PREVENT_VISIBLE",
+      isVisible: arg
+    })
+    console.log("passou")
+  })
 
   function handleSelectChange(e){
     switch (e.target.value) {
@@ -134,12 +146,6 @@ function ConfigContainer() {
         status: { message: "Waiting for encoder connection..." }
       })
       stream.on('preConnect', () => { console.log('preconnect') })
-      stream.on('postConnect', () => { 
-        dispatch({
-          type: "UPDATE_STATUS",
-          status: { message: "Encoder connected, starting stream..." }
-        });
-       })
       stream.on('doneConnect', () => { 
         dispatch({
           type: "UPDATE_STATUS",

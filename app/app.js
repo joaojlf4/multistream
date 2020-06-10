@@ -14,7 +14,11 @@ const App = () => {
 	return (
 		<Provider store={store}>
 			<IntlProvider locale="pt">
+<<<<<<< HEAD
+				<Prevent />
+=======
 				{/* <Prevent /> */}
+>>>>>>> fef767039ffa0f3481a55cf1244d45cc0a2c204c
 				<div className="container">
 					<ConfigContainer />
 					<StatusContainer />

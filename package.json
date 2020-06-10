@@ -1,7 +1,7 @@
 {
 	"name": "multistream",
 	"productName": "Multistream",
-	"version": "0.2.2",
+	"version": "0.3.0",
 	"description": "Simple alternative to make multi-platform streaming.",
 	"scripts": {
 		"build": "yarn build-main && yarn build-renderer",
@@ -37,6 +37,10 @@
 			{
 				"from": "./app/ffmpeg",
 				"to": "./app/ffmpeg"
+			},
+			{
+				"from": "./resources",
+				"to": "./resources"
 			}
 		],
 		"dmg": {
