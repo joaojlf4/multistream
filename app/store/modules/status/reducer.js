@@ -1,7 +1,4 @@
 // import nodeConsole from 'console';
-import terminal from 'console';
-
-
 export default function (state = [], action) {
   switch (action.type) {
     case "UPDATE_STATUS":

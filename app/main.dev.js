@@ -8,22 +8,13 @@
  *
  * @flow
  */
-<<<<<<< HEAD
-import { app, BrowserWindow, IpcMain, ipcMain, dialog } from "electron";
-=======
-import { app, BrowserWindow, IpcMain, ipcMain } from "electron";
->>>>>>> fef767039ffa0f3481a55cf1244d45cc0a2c204c
+import { app, BrowserWindow, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import sourceMapSupport from "source-map-support";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import electronDebug from "electron-debug";
 import ElectronStore from 'electron-store';
-<<<<<<< HEAD
-import PreventClosing from './windows/preventClosing';
-=======
->>>>>>> fef767039ffa0f3481a55cf1244d45cc0a2c204c
-
 // const { getWindowState, storeWindowState } = require('./services/persistConfig');
 
 /**
@@ -125,31 +116,15 @@ app.on("ready", async() => {
 		});
 
 		let isStreaming = false;
-<<<<<<< HEAD
-
-		mainWindow.on('close', (e) => {
-			if(isStreaming) { 
-				e.preventDefault();
-				mainWindow.webContents.send('confirmClosing', true)
-				// new PreventClosing(mainWindow)
-			};
-		})
-		
-=======
-		
-		ipcMain.once('setStreamingTrue', () => {
-			isStreaming = true;
-		})
-		ipcMain.once('setStreamingFalse', () => {
-			isStreaming = false;
-		})
-		
-		mainWindow.on("closed", () => {
-			mainWindow = null;
->>>>>>> fef767039ffa0f3481a55cf1244d45cc0a2c204c
-
 		ipcMain.on('setIsStreaming', (e, isStreamingState) => {
 			isStreaming = isStreamingState;
+		})
+
+		mainWindow.on('close', (e) => {
+			if(isStreaming) {
+				e.preventDefault();
+				mainWindow.webContents.send('confirmClosing', true);
+			}
 		})
 	}
 	createMainWindow()
