@@ -25,4 +25,4 @@ Then, replace node_modules/node-media-server/node_relay_server.js file with the 
 Now you can start contributing to the project!
 
 ## Donate!
-If you enjoy this project, you can buy me a coffee: https://www.buymeacoffee.com/joaojlf4
+If you enjoy this project, you can buy me a coffee: ![](https://www.buymeacoffee.com/joaojlf4)
